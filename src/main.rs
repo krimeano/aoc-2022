@@ -1,3 +1,6 @@
+mod run_params;
+
 fn main() {
-    println!("Hello, world!");
+    let args = run_params::read();
+    println!("Day {}, Verbose: {}", args.day, args.verbose);
 }
