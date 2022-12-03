@@ -1,4 +1,3 @@
-use std::cmp::max;
 
 use crate::aoc_lib::read_lines;
 
@@ -6,13 +5,28 @@ pub fn solve_1(file_path: String, verbose: Option<bool>) -> u32 {
     if let Some(true) = verbose {
         println!("SOLVING DAY 1 PART 1 from file {}", file_path)
     }
+    solve(file_path, 1)
+}
+
+pub fn solve_2(file_path: String, verbose: Option<bool>) -> u32 {
+    if let Some(true) = verbose {
+        println!("SOLVING DAY 1 PART 2 from file {}", file_path)
+    }
+    solve(file_path, 3)
+}
+
+fn solve(file_path: String, supply:usize)->u32{
+    make_elves(file_path)[0..supply].iter().sum()
+}
+
+fn make_elves(file_path: String) -> Vec<u32> {
     let lines = read_lines(file_path);
+    let mut elves = Vec::new();
     let mut current_elf = 0;
-    let mut max_calories = 0;
     for line in lines {
         match line.as_str() {
             "" => {
-                max_calories = max(current_elf, max_calories);
+                elves.push(current_elf);
                 current_elf = 0;
             }
             _ => match line.parse::<u32>() {
@@ -21,16 +35,9 @@ pub fn solve_1(file_path: String, verbose: Option<bool>) -> u32 {
             }
         }
     }
-    max_calories
+    elves.sort_by(|a,b|b.cmp(a));
+    elves
 }
-
-pub fn solve_2(file_path: String, verbose: Option<bool>) -> u32 {
-    if let Some(true) = verbose {
-        println!("SOLVING DAY 1 PART 2 from file {}", file_path)
-    }
-    0
-}
-
 
 #[cfg(test)]
 mod tests {
@@ -44,6 +51,6 @@ mod tests {
 
     #[test]
     fn day_1_2() {
-        assert_eq!(solve_2(make_file_name(false, 1, None), None), 0);
+        assert_eq!(solve_2(make_file_name(false, 1, None), Some(true)), 45000);
     }
 }
