@@ -1,4 +1,3 @@
-
 use crate::aoc_lib::read_lines;
 
 pub fn solve_1(file_path: String, verbose: Option<bool>) -> u32 {
@@ -15,7 +14,7 @@ pub fn solve_2(file_path: String, verbose: Option<bool>) -> u32 {
     solve(file_path, 3)
 }
 
-fn solve(file_path: String, supply:usize)->u32{
+fn solve(file_path: String, supply: usize) -> u32 {
     make_elves(file_path)[0..supply].iter().sum()
 }
 
@@ -31,11 +30,11 @@ fn make_elves(file_path: String) -> Vec<u32> {
             }
             _ => match line.parse::<u32>() {
                 Ok(x) => current_elf += x,
-                Err(e) => panic!("{}", e)
-            }
+                Err(e) => panic!("{}", e),
+            },
         }
     }
-    elves.sort_by(|a,b|b.cmp(a));
+    elves.sort_by(|a, b| b.cmp(a));
     elves
 }
 

@@ -24,22 +24,19 @@ pub fn read() -> RunParams {
                 match arg.parse::<u8>() {
                     Ok(x) => match x {
                         1..=25 => day = x,
-                        _ => panic!("Day should be in range 1..25, received {}", x)
+                        _ => panic!("Day should be in range 1..25, received {}", x),
                     },
-                    Err(e) => panic!("Can't parse a day.\nError:\n{}", e)
+                    Err(e) => panic!("Can't parse a day.\nError:\n{}", e),
                 }
                 reader_state = ReaderState::Anything
             }
-            ReaderState::Anything => {
-                match arg.as_str() {
-                    "-d" | "--day" => reader_state = ReaderState::Day,
-                    "-v" | "--verbose" => verbose = true,
-                    _ => {}
-                }
-            }
+            ReaderState::Anything => match arg.as_str() {
+                "-d" | "--day" => reader_state = ReaderState::Day,
+                "-v" | "--verbose" => verbose = true,
+                _ => {}
+            },
         }
     }
 
     RunParams { day, verbose }
 }
-
