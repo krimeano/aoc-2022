@@ -43,14 +43,12 @@ mod tests {
     #[test]
     fn day_1_1() {
         let probe = read_probe(1, None);
-        assert_eq!(solve_1(&probe, Some(true)), 24000);
-        println!("VALID!")
+        assert_eq!(solve_1(&probe, Some(false)), 24000);
     }
 
     #[test]
     fn day_1_2() {
         let probe = read_probe(1, None);
-        assert_eq!(solve_2(&probe, Some(true)), 45000);
-        println!("VALID!")
+        assert_eq!(solve_2(&probe, Some(false)), 45000);
     }
 }
