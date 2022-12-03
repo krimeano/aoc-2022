@@ -3,6 +3,7 @@ use crate::aoc_lib::read_day;
 mod day_pattern;
 mod day_1;
 mod day_2;
+mod day_3;
 
 pub fn solve(day: u8, verbose: Option<bool>) {
     println!("Solving day {}", day);
@@ -19,6 +20,12 @@ pub fn solve(day: u8, verbose: Option<bool>) {
             let r1 = day_2::solve_1(&read_day(day, None), verbose);
             println!("Part 1: {}", r1);
             let r2 = day_2::solve_2(&read_day(day, None), verbose);
+            println!("Part 2: {}", r2);
+        }
+        3 => {
+            let r1 = day_3::solve_1(&read_day(day, None), verbose);
+            println!("Part 1: {}", r1);
+            let r2 = day_3::solve_2(&read_day(day, None), verbose);
             println!("Part 2: {}", r2);
         }
 
