@@ -1,11 +1,26 @@
 use crate::aoc_lib::read_day;
 
+mod day_pattern;
 mod day_1;
 
 pub fn solve(day: u8, verbose: Option<bool>) {
     println!("Solving day {}", day);
-    let r1 = day_1::solve_1(&read_day(1, None), verbose);
-    println!("Part 1: {}", r1);
-    let r2 = day_1::solve_2(&read_day(1, None), verbose);
-    println!("Part 2: {}", r2);
+
+    match day {
+        1 => {
+            let r1 = day_1::solve_1(&read_day(1, None), verbose);
+            println!("Part 1: {}", r1);
+            let r2 = day_1::solve_2(&read_day(1, None), verbose);
+            println!("Part 2: {}", r2);
+        }
+
+        _ => {
+            let r1 = day_pattern::solve_1(&read_day(1, None), verbose);
+            println!("Part 1: {}", r1);
+            let r2 = day_pattern::solve_2(&read_day(1, None), verbose);
+            println!("Part 2: {}", r2);
+
+            panic!("unknown day {}", day)
+        }
+    }
 }
