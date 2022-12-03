@@ -1,9 +1,9 @@
 use crate::aoc_lib::read_day;
 
-mod day_pattern;
 mod day_1;
 mod day_2;
 mod day_3;
+mod day_pattern;
 
 pub fn solve(day: u8, verbose: Option<bool>) {
     println!("Solving day {}", day);

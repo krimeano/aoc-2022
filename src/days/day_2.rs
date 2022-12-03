@@ -10,8 +10,11 @@ pub fn solve_2(input_lines: &[String], verbose: Option<bool>) -> u32 {
     solve(input_lines, verbose, get_round_score_2)
 }
 
-
-fn solve(input_lines: &[String], verbose: Option<bool>, get_round_score: fn(&String) -> u32) -> u32 {
+fn solve(
+    input_lines: &[String],
+    verbose: Option<bool>,
+    get_round_score: fn(&str) -> u32,
+) -> u32 {
     let mut score = 0;
     for line in input_lines {
         if line.is_empty() {
@@ -26,41 +29,41 @@ fn solve(input_lines: &[String], verbose: Option<bool>, get_round_score: fn(&Str
     score
 }
 
-fn get_round_score_1(line: &String) -> u32 {
-    let win_score = match line.as_str() {
+fn get_round_score_1(line: &str) -> u32 {
+    let win_score = match line {
         "A Y" | "B Z" | "C X" => 6,
         "A X" | "B Y" | "C Z" => 3,
-        _ => 0
+        _ => 0,
     };
     let base_score = match line.chars().last() {
         Some('X') => 1,
         Some('Y') => 2,
         Some('Z') => 3,
-        _ => 0
+        _ => 0,
     };
     win_score + base_score
 }
 
-fn get_round_score_2(line: &String) -> u32 {
+fn get_round_score_2(line: &str) -> u32 {
     let win_score = match line.chars().last() {
         Some('X') => 0,
         Some('Y') => 3,
         Some('Z') => 6,
-        _ => panic!("Invalid Last Char")
+        _ => panic!("Invalid Last Char"),
     };
 
     let base_score = match line.chars().next() {
         Some('A') => 0,
         Some('B') => 1,
         Some('C') => 2,
-        _ => panic!("Invalid First Char")
+        _ => panic!("Invalid First Char"),
     };
 
     let shift_score = match line.chars().last() {
         Some('X') => 2, // lose
         Some('Y') => 0, // draw
         Some('Z') => 1, // win
-        _ => panic!("Invalid Last Char")
+        _ => panic!("Invalid Last Char"),
     };
 
     win_score + (base_score + shift_score) % 3 + 1
