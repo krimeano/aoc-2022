@@ -1,5 +1,14 @@
 use std::fs;
 
+pub fn read_day(day: u8, variant: Option<u8>) -> Vec<String> {
+    read_lines(make_file_name(true, day, variant))
+}
+
+#[allow(dead_code)]
+pub fn read_probe(day: u8, variant: Option<u8>) -> Vec<String> {
+    read_lines(make_file_name(false, day, variant))
+}
+
 pub fn make_file_name(is_day: bool, day: u8, variant: Option<u8>) -> String {
     let prefix = if is_day { "day_" } else { "probe_" };
     let suffix = if let Some(x) = variant {
