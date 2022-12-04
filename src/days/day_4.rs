@@ -6,7 +6,7 @@ pub fn solve_2(input_lines: &[String], _verbose: Option<bool>) -> u32 {
     solve(input_lines, check_overlap)
 }
 
-fn solve(input_lines: &[String], check: fn(&Vec<Vec<u8>>) -> bool) -> u32 {
+fn solve(input_lines: &[String], check: fn(&[Vec<u8>]) -> bool) -> u32 {
     input_lines
         .iter()
         .filter(|x| !x.is_empty())
@@ -19,7 +19,7 @@ fn solve(input_lines: &[String], check: fn(&Vec<Vec<u8>>) -> bool) -> u32 {
         .count() as u32
 }
 
-fn check_contain(pair: &Vec<Vec<u8>>) -> bool {
+fn check_contain(pair: &[Vec<u8>]) -> bool {
     let a = pair[0][0];
     let b = pair[0][1];
     let c = pair[1][0];
@@ -27,17 +27,13 @@ fn check_contain(pair: &Vec<Vec<u8>>) -> bool {
     (a <= c && b >= d) || (a >= c && b <= d)
 }
 
-fn check_overlap(pair: &Vec<Vec<u8>>) -> bool {
+fn check_overlap(pair: &[Vec<u8>]) -> bool {
     let a = pair[0][0];
     let b = pair[0][1];
     let c = pair[1][0];
     let d = pair[1][1];
-    (a >= c && a <= d)
-        || (b >= c && b <= d)
-        || (c >= a && c <= b)
-        || (d >= a && d <= b)
+    (a >= c && a <= d) || (b >= c && b <= d) || (c >= a && c <= b) || (d >= a && d <= b)
 }
-
 
 #[cfg(test)]
 mod tests {
