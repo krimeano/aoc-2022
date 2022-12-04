@@ -1,16 +1,16 @@
 pub fn solve_1(input_lines: &[String], _verbose: Option<bool>) -> u32 {
-    let mut total = 0;
-    for line in input_lines {
-        if line.is_empty() {
-            continue;
-        }
-
-        let pair = line.split(',').map(|x| x.split('-').map(|y| y.parse().unwrap()).collect::<Vec<u32>>()).collect::<Vec<Vec<u32>>>();
-        if (pair[0][0] <= pair[1][0] && pair[0][1] >= pair[1][1]) || (pair[0][0] >= pair[1][0] && pair[0][1] <= pair[1][1]) {
-            total += 1;
-        }
-    }
-    total
+    input_lines
+        .iter()
+        .filter(|x| !x.is_empty())
+        .map(|x| {
+            x.split(',')
+                .map(|y| y.split('-').map(|z| z.parse().unwrap()).collect())
+                .collect::<Vec<Vec<u32>>>()
+        })
+        .filter(|x| {
+            (x[0][0] <= x[1][0] && x[0][1] >= x[1][1]) || (x[0][0] >= x[1][0] && x[0][1] <= x[1][1])
+        })
+        .count() as u32
 }
 
 pub fn solve_2(_input_lines: &[String], _verbose: Option<bool>) -> u32 {
