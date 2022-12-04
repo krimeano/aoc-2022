@@ -1,8 +1,8 @@
-pub fn solve_1(input_lines: &[String], _verbose: Option<bool>) -> u32 {
+pub fn solve_1(input_lines: &[String], _verbose: bool) -> u32 {
     solve(input_lines, check_contain)
 }
 
-pub fn solve_2(input_lines: &[String], _verbose: Option<bool>) -> u32 {
+pub fn solve_2(input_lines: &[String], _verbose: bool) -> u32 {
     solve(input_lines, check_overlap)
 }
 
@@ -43,12 +43,12 @@ mod tests {
     #[test]
     fn part_1() {
         let probe = read_probe(4, None);
-        assert_eq!(solve_1(&probe, Some(true)), 2);
+        assert_eq!(solve_1(&probe, true), 2);
     }
 
     #[test]
     fn part_2() {
         let probe = read_probe(4, None);
-        assert_eq!(solve_2(&probe, Some(true)), 4);
+        assert_eq!(solve_2(&probe, true), 4);
     }
 }

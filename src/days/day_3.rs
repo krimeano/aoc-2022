@@ -2,8 +2,8 @@ use std::collections::HashSet;
 
 const GROUP_SIZE: usize = 3;
 
-pub fn solve_1(input_lines: &[String], verbose: Option<bool>) -> u32 {
-    if let Some(true) = verbose {
+pub fn solve_1(input_lines: &[String], verbose: bool) -> u32 {
+    if verbose {
         for x in ['a', 'm', 'z', 'A', 'M', 'Z'] {
             println!("{} = {}", x, x as u32);
         }
@@ -15,7 +15,7 @@ pub fn solve_1(input_lines: &[String], verbose: Option<bool>) -> u32 {
         if size == 0 {
             continue;
         }
-        if let Some(true) = verbose {
+        if verbose {
             println!("{}, {}", line, size);
         }
         if line.len() % 2 == 1 {
@@ -29,7 +29,7 @@ pub fn solve_1(input_lines: &[String], verbose: Option<bool>) -> u32 {
     total
 }
 
-pub fn solve_2(input_lines: &[String], verbose: Option<bool>) -> u32 {
+pub fn solve_2(input_lines: &[String], verbose: bool) -> u32 {
     let mut ix: usize = 0;
     let mut common: Option<HashSet<char>> = None;
     let mut total = 0;
@@ -37,7 +37,7 @@ pub fn solve_2(input_lines: &[String], verbose: Option<bool>) -> u32 {
         if line.is_empty() {
             continue;
         }
-        if let Some(true) = verbose {
+        if verbose {
             println!("{}, {}", ix, line);
         }
         match common {
@@ -70,12 +70,12 @@ fn compare_str_with_set(set: HashSet<char>, line: &str) -> HashSet<char> {
     out
 }
 
-fn calculate_value(common: HashSet<char>, verbose: Option<bool>) -> u32 {
+fn calculate_value(common: HashSet<char>, verbose: bool) -> u32 {
     let mut out = 0;
 
     for x in common {
         let value = char_to_value(x);
-        if let Some(true) = verbose {
+        if verbose {
             println!("common '{}' = {}", x, value)
         }
         out += value;
@@ -100,12 +100,12 @@ mod tests {
     #[test]
     fn part_1() {
         let probe = read_probe(3, None);
-        assert_eq!(solve_1(&probe, Some(false)), 157);
+        assert_eq!(solve_1(&probe, false), 157);
     }
 
     #[test]
     fn part_2() {
         let probe = read_probe(3, None);
-        assert_eq!(solve_2(&probe, Some(false)), 70);
+        assert_eq!(solve_2(&probe, false), 70);
     }
 }

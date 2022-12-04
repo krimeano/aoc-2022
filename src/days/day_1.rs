@@ -1,12 +1,12 @@
-pub fn solve_1(input_lines: &[String], verbose: Option<bool>) -> u32 {
-    if let Some(true) = verbose {
+pub fn solve_1(input_lines: &[String], verbose: bool) -> u32 {
+    if verbose {
         println!("SOLVING DAY 1 PART 1");
     }
     solve(input_lines, 1)
 }
 
-pub fn solve_2(input_lines: &[String], verbose: Option<bool>) -> u32 {
-    if let Some(true) = verbose {
+pub fn solve_2(input_lines: &[String], verbose: bool) -> u32 {
+    if verbose {
         println!("SOLVING DAY 1 PART 2")
     }
     solve(input_lines, 3)
@@ -40,12 +40,12 @@ mod tests {
     #[test]
     fn day_1_1() {
         let probe = read_probe(1, None);
-        assert_eq!(solve_1(&probe, Some(false)), 24000);
+        assert_eq!(solve_1(&probe, false), 24000);
     }
 
     #[test]
     fn day_1_2() {
         let probe = read_probe(1, None);
-        assert_eq!(solve_2(&probe, Some(false)), 45000);
+        assert_eq!(solve_2(&probe, false), 45000);
     }
 }

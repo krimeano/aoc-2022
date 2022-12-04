@@ -1,4 +1,4 @@
-pub fn solve_1(input_lines: &[String], verbose: Option<bool>) -> u32 {
+pub fn solve_1(input_lines: &[String], verbose: bool) -> u32 {
     // A, X - Rock = 1
     // B, Y - Paper = 2
     // C, Z - Scissors = 3
@@ -6,18 +6,18 @@ pub fn solve_1(input_lines: &[String], verbose: Option<bool>) -> u32 {
     solve(input_lines, verbose, get_round_score_1)
 }
 
-pub fn solve_2(input_lines: &[String], verbose: Option<bool>) -> u32 {
+pub fn solve_2(input_lines: &[String], verbose: bool) -> u32 {
     solve(input_lines, verbose, get_round_score_2)
 }
 
-fn solve(input_lines: &[String], verbose: Option<bool>, get_round_score: fn(&str) -> u32) -> u32 {
+fn solve(input_lines: &[String], verbose: bool, get_round_score: fn(&str) -> u32) -> u32 {
     let mut score = 0;
     for line in input_lines {
         if line.is_empty() {
             continue;
         }
         let round_score = get_round_score(line);
-        if let Some(true) = verbose {
+        if verbose {
             println!(" = {}", round_score);
         }
         score += round_score;
@@ -73,12 +73,12 @@ mod tests {
     #[test]
     fn part_1() {
         let probe = read_probe(2, None);
-        assert_eq!(solve_1(&probe, Some(false)), 15);
+        assert_eq!(solve_1(&probe, false), 15);
     }
 
     #[test]
     fn part_2() {
         let probe = read_probe(2, None);
-        assert_eq!(solve_2(&probe, Some(false)), 12);
+        assert_eq!(solve_2(&probe, false), 12);
     }
 }

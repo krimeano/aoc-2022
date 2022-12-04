@@ -6,7 +6,7 @@ mod day_3;
 mod day_4;
 mod day_pattern;
 
-pub fn solve(day: u8, verbose: Option<bool>) {
+pub fn solve(day: u8, verbose: bool) {
     println!("Solving day {}", day);
 
     match day {

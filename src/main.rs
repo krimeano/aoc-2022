@@ -4,5 +4,5 @@ mod run_params;
 
 fn main() {
     let args = run_params::read();
-    days::solve(args.day, Some(args.verbose));
+    days::solve(args.day, args.verbose);
 }
