@@ -10,11 +10,7 @@ pub fn solve_2(input_lines: &[String], verbose: Option<bool>) -> u32 {
     solve(input_lines, verbose, get_round_score_2)
 }
 
-fn solve(
-    input_lines: &[String],
-    verbose: Option<bool>,
-    get_round_score: fn(&str) -> u32,
-) -> u32 {
+fn solve(input_lines: &[String], verbose: Option<bool>, get_round_score: fn(&str) -> u32) -> u32 {
     let mut score = 0;
     for line in input_lines {
         if line.is_empty() {
