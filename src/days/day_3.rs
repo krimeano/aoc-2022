@@ -57,17 +57,13 @@ pub fn solve_2(input_lines: &[String], verbose: Option<bool>) -> u32 {
 }
 
 fn str_to_set(line: &str) -> HashSet<char> {
-    let mut out = HashSet::new();
-    for x in line.chars() {
-        out.insert(x);
-    }
-    out
+    line.chars().collect()
 }
 
 fn compare_str_with_set(set: HashSet<char>, line: &str) -> HashSet<char> {
     let mut out = HashSet::new();
     for x in line.chars() {
-        if set.contains(&x) && !out.contains(&x) {
+        if set.contains(&x) {
             out.insert(x);
         }
     }
