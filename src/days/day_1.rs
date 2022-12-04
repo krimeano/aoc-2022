@@ -25,10 +25,7 @@ fn make_elves(input_lines: &[String]) -> Vec<u32> {
                 elves.push(current_elf);
                 current_elf = 0;
             }
-            _ => match line.parse::<u32>() {
-                Ok(x) => current_elf += x,
-                Err(e) => panic!("{}", e),
-            },
+            _ => current_elf += line.parse::<u32>().unwrap(),
         }
     }
     elves.sort_by(|a, b| b.cmp(a));
