@@ -5,7 +5,7 @@ enum ReadMode {
 }
 
 
-pub fn solve_1(input_lines: &[String], _verbose: bool) -> String {
+pub fn solve_1(input_lines: &[String], verbose: bool) -> String {
     let mut mode: ReadMode = ReadMode::Crates;
     let mut crates_lines: Vec<&String> = Vec::new();
     let mut crates: Vec<String> = Vec::new();
@@ -30,7 +30,9 @@ pub fn solve_1(input_lines: &[String], _verbose: bool) -> String {
                         .filter(|x| if let Some(' ') = x.chars().next() { false } else { true })
                         .map(|x| x[1..].trim().to_string())
                         .collect();
-                    println!("{:?}", crates)
+                    if verbose {
+                        println!("{:?}", crates);
+                    }
                 }
                 _ => {}
             }
@@ -43,17 +45,25 @@ pub fn solve_1(input_lines: &[String], _verbose: bool) -> String {
                     .filter(|(ix, _)| ix % 2 == 1)
                     .map(|(_, x)| x.parse().unwrap())
                     .collect();
-                println!("{:?}", cmd);
-                let size_from= crates[cmd[1] - 1].len();
-                let moving= crates[cmd[1] - 1][size_from-cmd[0]..].to_string();
-                crates[cmd[1] - 1] = crates[cmd[1] - 1][..size_from-cmd[0]-1].to_string();
-                crates[cmd[2] - 1]= (crates[cmd[2] - 1][..].to_owned() + &moving[..]).to_string();
-                println!("{:?}", crates)
+                if verbose {
+                    println!("{:?}", cmd);
+                }
 
+                for _ in 0..cmd[0] {
+                    let x = crates[cmd[1] - 1].pop().unwrap();
+                    crates[cmd[2] - 1].push(x);
+                }
+                if verbose {
+                    println!("{:?}", crates)
+                }
             }
         }
     }
-    "cmz".to_string()
+    let mut out = String::new();
+    for c in crates {
+        out.push(c.chars().last().unwrap());
+    }
+    out
 }
 
 pub fn solve_2(_input_lines: &[String], _verbose: bool) -> u32 {
