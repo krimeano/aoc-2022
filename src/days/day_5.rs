@@ -8,8 +8,8 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> String {
     solve(input_lines, verbose, perform_command_1)
 }
 
-pub fn solve_2(_input_lines: &[String], _verbose: bool) -> u32 {
-    0
+pub fn solve_2(input_lines: &[String], verbose: bool) -> String {
+    solve(input_lines, verbose, perform_command_2)
 }
 
 pub fn solve(input_lines: &[String], verbose: bool, perform_command: fn(Vec<usize>, Vec<String>) -> Vec<String>) -> String {
@@ -73,9 +73,17 @@ pub fn solve(input_lines: &[String], verbose: bool, perform_command: fn(Vec<usiz
 
 pub fn perform_command_1(cmd: Vec<usize>, mut crates: Vec<String>) -> Vec<String> {
     for _ in 0..cmd[0] {
-        let x = crates[cmd[1] - 1].pop().unwrap();
-        crates[cmd[2] - 1].push(x);
+        let crane = crates[cmd[1] - 1].pop().unwrap();
+        crates[cmd[2] - 1].push(crane);
     }
+    crates
+}
+
+pub fn perform_command_2(cmd: Vec<usize>, mut crates: Vec<String>) -> Vec<String> {
+    let size = crates[cmd[1] - 1].len();
+    let crane = crates[cmd[1] - 1][size - cmd[0]..].to_string();
+    crates[cmd[1] - 1] = crates[cmd[1] - 1][..size - cmd[0]].to_string();
+    crates[cmd[2] - 1] = (crates[cmd[2] - 1][..].to_owned() + &crane[..]).to_string();
     crates
 }
 
@@ -88,12 +96,12 @@ mod tests {
     #[test]
     fn part_1() {
         let probe = read_probe(5, None);
-        assert_eq!(solve_1(&probe, true), "CMZ");
+        assert_eq!(solve_1(&probe, false), "CMZ");
     }
 
     #[test]
     fn part_2() {
         let probe = read_probe(5, None);
-        assert_eq!(solve_2(&probe, true), 0);
+        assert_eq!(solve_2(&probe, false), "MCD");
     }
 }
