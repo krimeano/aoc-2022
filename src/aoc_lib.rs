@@ -26,6 +26,6 @@ pub fn read_lines(filename: String) -> Vec<String> {
 
     contents
         .split('\n')
-        .map(|x| String::from(x.trim()))
+        .map(|x| String::from(x))
         .collect()
 }
