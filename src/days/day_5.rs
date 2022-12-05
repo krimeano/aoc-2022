@@ -4,8 +4,15 @@ enum ReadMode {
     Commands,
 }
 
-
 pub fn solve_1(input_lines: &[String], verbose: bool) -> String {
+    solve(input_lines, verbose, perform_command_1)
+}
+
+pub fn solve_2(_input_lines: &[String], _verbose: bool) -> u32 {
+    0
+}
+
+pub fn solve(input_lines: &[String], verbose: bool, perform_command: fn(Vec<usize>, Vec<String>) -> Vec<String>) -> String {
     let mut mode: ReadMode = ReadMode::Crates;
     let mut crates_lines: Vec<&String> = Vec::new();
     let mut crates: Vec<String> = Vec::new();
@@ -49,10 +56,8 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> String {
                     println!("{:?}", cmd);
                 }
 
-                for _ in 0..cmd[0] {
-                    let x = crates[cmd[1] - 1].pop().unwrap();
-                    crates[cmd[2] - 1].push(x);
-                }
+                crates = perform_command(cmd, crates);
+
                 if verbose {
                     println!("{:?}", crates)
                 }
@@ -66,9 +71,14 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> String {
     out
 }
 
-pub fn solve_2(_input_lines: &[String], _verbose: bool) -> u32 {
-    0
+pub fn perform_command_1(cmd: Vec<usize>, mut crates: Vec<String>) -> Vec<String> {
+    for _ in 0..cmd[0] {
+        let x = crates[cmd[1] - 1].pop().unwrap();
+        crates[cmd[2] - 1].push(x);
+    }
+    crates
 }
+
 
 #[cfg(test)]
 mod tests {
