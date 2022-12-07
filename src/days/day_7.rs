@@ -5,6 +5,29 @@ const DISK_SPACE: u32 = 70000000;
 const DEMAND_SPACE: u32 = 30000000;
 
 pub fn solve_1(input_lines: &[String], verbose: bool) -> u32 {
+    scan_files(input_lines, verbose)
+        .iter()
+        .filter(|(_, &size)| size <= MAX_SIZE)
+        .map(|(_, &size)| size)
+        .sum()
+}
+
+pub fn solve_2(input_lines: &[String], verbose: bool) -> u32 {
+    let mut sizes: Vec<u32> = scan_files(input_lines, verbose)
+        .iter()
+        .map(|(_, &size)| size)
+        .collect();
+    sizes.sort();
+    let total_size = sizes[sizes.len() - 1];
+    for size in sizes {
+        if size + DISK_SPACE > DEMAND_SPACE + total_size {
+            return size;
+        }
+    }
+    0
+}
+
+fn scan_files(input_lines: &[String], verbose: bool) -> HashMap<Vec<&str>, u32> {
     let mut cur_dir = vec![""];
     let mut dir_sizes = HashMap::from([(vec![""], 0)]);
     let mut file_sizes: HashMap<Vec<&str>, u32> = HashMap::new();
@@ -21,8 +44,10 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> u32 {
                 if arr[1] == "cd" {
                     match arr[2] {
                         "/" => cur_dir = vec![""],
-                        ".." => { cur_dir.pop(); }
-                        _ => cur_dir.push(arr[2])
+                        ".." => {
+                            cur_dir.pop();
+                        }
+                        _ => cur_dir.push(arr[2]),
                     }
                     if verbose {
                         println!("CHANGED DIRECTORY TO {:?}", cur_dir.join("/"));
@@ -46,7 +71,9 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> u32 {
                 }
                 file_sizes.entry(file_path.clone()).or_insert(size);
             }
-            _ => { panic!("UNKNOWN LINE {:?}", arr) }
+            _ => {
+                panic!("UNKNOWN LINE {:?}", arr)
+            }
         }
     }
     for entry in file_sizes.iter() {
@@ -59,14 +86,7 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> u32 {
             parent_dir.pop();
         }
     }
-    dir_sizes.iter()
-        .filter(|(_, &size)| size <= MAX_SIZE)
-        .map(|(_, &size)| size)
-        .sum()
-}
-
-pub fn solve_2(_input_lines: &[String], _verbose: bool) -> u32 {
-    0
+    dir_sizes
 }
 
 #[cfg(test)]
@@ -83,6 +103,6 @@ mod tests {
     #[test]
     fn part_2() {
         let probe = read_probe(7, None);
-        assert_eq!(solve_2(&probe, true), 0);
+        assert_eq!(solve_2(&probe, true), 24933642);
     }
 }
