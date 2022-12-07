@@ -35,7 +35,7 @@ fn scan_files(input_lines: &[String], verbose: bool) -> HashMap<Vec<&str>, u32> 
         if line.is_empty() {
             continue;
         }
-        let arr: Vec<&str> = line.split(" ").collect();
+        let arr: Vec<&str> = line.split(' ').collect();
         match arr[0].chars().next().unwrap() {
             '$' => {
                 if verbose {
