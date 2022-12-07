@@ -24,8 +24,5 @@ pub fn read_lines(filename: String) -> Vec<String> {
     let contents = fs::read_to_string(&filename)
         .unwrap_or_else(|_| panic!("Something went wrong reading the file {}", &filename));
 
-    contents
-        .split('\n')
-        .map(|x| String::from(x))
-        .collect()
+    contents.split('\n').map(String::from).collect()
 }

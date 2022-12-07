@@ -12,7 +12,11 @@ pub fn solve_2(input_lines: &[String], verbose: bool) -> String {
     solve(input_lines, verbose, perform_command_2)
 }
 
-pub fn solve(input_lines: &[String], verbose: bool, perform_command: fn(Vec<usize>, Vec<String>) -> Vec<String>) -> String {
+pub fn solve(
+    input_lines: &[String],
+    verbose: bool,
+    perform_command: fn(Vec<usize>, Vec<String>) -> Vec<String>,
+) -> String {
     let mut mode: ReadMode = ReadMode::Crates;
     let mut crates_lines: Vec<&String> = Vec::new();
     let mut crates: Vec<String> = Vec::new();
@@ -33,8 +37,9 @@ pub fn solve(input_lines: &[String], verbose: bool, perform_command: fn(Vec<usiz
                             }
                         }
                     }
-                    crates = crates.iter()
-                        .filter(|x| if let Some(' ') = x.chars().next() { false } else { true })
+                    crates = crates
+                        .iter()
+                        .filter(|x| !matches!(x.chars().next(), Some(' ')))
                         .map(|x| x[1..].trim().to_string())
                         .collect();
                     if verbose {
@@ -46,9 +51,11 @@ pub fn solve(input_lines: &[String], verbose: bool, perform_command: fn(Vec<usiz
             continue;
         }
         match mode {
-            ReadMode::Crates => { crates_lines.push(line) }
+            ReadMode::Crates => crates_lines.push(line),
             ReadMode::Commands => {
-                let cmd: Vec<usize> = line.split(' ').enumerate()
+                let cmd: Vec<usize> = line
+                    .split(' ')
+                    .enumerate()
                     .filter(|(ix, _)| ix % 2 == 1)
                     .map(|(_, x)| x.parse().unwrap())
                     .collect();
@@ -83,10 +90,9 @@ pub fn perform_command_2(cmd: Vec<usize>, mut crates: Vec<String>) -> Vec<String
     let size = crates[cmd[1] - 1].len();
     let crane = crates[cmd[1] - 1][size - cmd[0]..].to_string();
     crates[cmd[1] - 1] = crates[cmd[1] - 1][..size - cmd[0]].to_string();
-    crates[cmd[2] - 1] = (crates[cmd[2] - 1][..].to_owned() + &crane[..]).to_string();
+    crates[cmd[2] - 1] = crates[cmd[2] - 1][..].to_owned() + &crane[..];
     crates
 }
-
 
 #[cfg(test)]
 mod tests {

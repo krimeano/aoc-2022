@@ -15,7 +15,7 @@ fn solve(input: &String, frame_size: usize) -> usize {
     let size = input.len();
     for ix in 0..size - frame_size {
         if all_unique(&input[ix..ix + frame_size]) {
-            return  ix + frame_size;
+            return ix + frame_size;
         }
     }
     0
