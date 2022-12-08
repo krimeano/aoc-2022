@@ -1,10 +1,51 @@
-const MAX_TREE: i8 = 9;
+use std::cmp::max;
 
-pub fn solve_1(input_lines: &[String], _verbose: bool) -> u32 {
-    let forest: Vec<Vec<i8>> = input_lines
+#[derive(Debug)]
+struct Levels {
+    left: i8,
+    top: i8,
+    right: i8,
+    bottom: i8,
+}
+
+#[derive(Debug)]
+struct Tree {
+    height: i8,
+    levels: Levels,
+}
+
+impl Levels {
+    pub fn new() -> Self {
+        Self {
+            left: -1,
+            top: -1,
+            right: -1,
+            bottom: -1,
+        }
+    }
+}
+
+impl Tree {
+    pub fn new(height: i8) -> Self {
+        Self {
+            height,
+            levels: Levels::new(),
+        }
+    }
+
+    pub fn visible(&self) -> bool {
+        self.height > self.levels.left
+            || self.height > self.levels.top
+            || self.height > self.levels.right
+            || self.height > self.levels.bottom
+    }
+}
+
+pub fn solve_1(input_lines: &[String], _verbose: bool) -> usize {
+    let mut forest: Vec<Vec<Tree>> = input_lines
         .iter()
         .filter(|x| !x.is_empty())
-        .map(|x| x.chars().map(|y| y as i8 - '0' as i8).collect())
+        .map(|x| x.chars().map(|y| Tree::new(y as i8 - '0' as i8)).collect())
         .collect();
     let h = forest.len();
     if h == 0 {
@@ -14,67 +55,49 @@ pub fn solve_1(input_lines: &[String], _verbose: bool) -> u32 {
     if w == 0 {
         return 0;
     }
-    let mut visibile: Vec<Vec<bool>> = forest
-        .iter()
-        .map(|x| x.iter().map(|_| false).collect())
-        .collect();
     for ih in 0..h {
-        let ix = ih;
-
-        let mut outer = -1;
         for jw in 0..w {
-            let jy = jw;
-            if forest[ix][jy] > outer {
-                outer = forest[ix][jy];
-                visibile[ix][jy] = true;
-                if outer == MAX_TREE {
-                    break;
-                }
+            {
+                let ix = ih;
+                let jy = jw;
+                let top = if ix > 0 {
+                    max(forest[ix - 1][jy].height, forest[ix - 1][jy].levels.top)
+                } else {
+                    -1
+                };
+                let left = if jy > 0 {
+                    max(forest[ix][jy - 1].height, forest[ix][jy - 1].levels.left)
+                } else {
+                    -1
+                };
+                let tree = &mut forest[ix][jy];
+                tree.levels.left = left;
+                tree.levels.top = top;
             }
-        }
-
-        let mut outer = -1;
-        for jw in 0..w {
-            let jy = w - jw - 1;
-            if forest[ix][jy] > outer {
-                outer = forest[ix][jy];
-                visibile[ix][jy] = true;
-                if outer == MAX_TREE {
-                    break;
-                }
+            {
+                let ix = h - ih - 1;
+                let jy = w - jw - 1;
+                let bottom = if ix < h - 1 {
+                    max(forest[ix + 1][jy].height, forest[ix + 1][jy].levels.bottom)
+                } else {
+                    -1
+                };
+                let right = if jy < w - 1 {
+                    max(forest[ix][jy + 1].height, forest[ix][jy + 1].levels.right)
+                } else {
+                    -1
+                };
+                let tree = &mut forest[ix][jy];
+                tree.levels.bottom = bottom;
+                tree.levels.right = right;
             }
         }
     }
 
-    for jw in 0..w {
-        let jy = jw;
-
-        let mut outer = -1;
-        for ih in 0..h {
-            let ix = ih;
-            if forest[ix][jy] > outer {
-                outer = forest[ix][jy];
-                visibile[ix][jy] = true;
-                if outer == MAX_TREE {
-                    break;
-                }
-            }
-        }
-
-        let mut outer = -1;
-        for ih in 0..h {
-            let ix = h - ih - 1;
-            if forest[ix][jy] > outer {
-                outer = forest[ix][jy];
-                visibile[ix][jy] = true;
-                if outer == MAX_TREE {
-                    break;
-                }
-            }
-        }
-    }
-
-    visibile.iter().map(|row| row.iter().map(|&y| if y { 1 } else { 0 }).sum::<u32>()).sum()
+    forest
+        .iter()
+        .map(|row| row.iter().filter(|&x| x.visible()).count())
+        .sum::<usize>()
 }
 
 pub fn solve_2(_input_lines: &[String], _verbose: bool) -> u32 {
