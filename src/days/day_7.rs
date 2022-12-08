@@ -103,6 +103,6 @@ mod tests {
     #[test]
     fn part_2() {
         let probe = read_probe(7, None);
-        assert_eq!(solve_2(&probe, true), 24933642);
+        assert_eq!(solve_2(&probe, false), 24933642);
     }
 }
