@@ -9,6 +9,7 @@ mod day_6;
 mod day_7;
 mod day_8;
 mod day_9;
+mod day_10;
 mod day_pattern;
 
 pub fn solve(day: u8, verbose: bool) {
@@ -70,10 +71,18 @@ pub fn solve(day: u8, verbose: bool) {
             let r2 = day_8::solve_2(&read_day(day, None), verbose);
             println!("Part 2: {}", r2);
         }
+
         9 => {
             let r1 = day_9::solve_1(&read_day(day, None), verbose);
             println!("Part 1: {}", r1);
             let r2 = day_9::solve_2(&read_day(day, None), verbose);
+            println!("Part 2: {}", r2);
+        }
+
+        10 => {
+            let r1 = day_10::solve_1(&read_day(day, None), verbose);
+            println!("Part 1: {}", r1);
+            let r2 = day_10::solve_2(&read_day(day, None), verbose);
             println!("Part 2: {}", r2);
         }
 
