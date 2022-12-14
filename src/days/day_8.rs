@@ -38,10 +38,7 @@ impl Tree {
     pub fn visible(&self) -> bool {
         let xm = self.forest_size.0 as isize;
         let ym = self.forest_size.1 as isize;
-        self.seen.top < 0
-            || self.seen.left < 0
-            || self.seen.bottom == xm
-            || self.seen.right == ym
+        self.seen.top < 0 || self.seen.left < 0 || self.seen.bottom == xm || self.seen.right == ym
     }
 
     pub fn total_space(&self, ix: usize, jy: usize) -> usize {
@@ -127,11 +124,20 @@ fn input_to_forest(input_lines: &[String]) -> Vec<Vec<Tree>> {
 
     lines
         .iter()
-        .map(|x| x.chars().map(|y| Tree::new(y as i8 - '0' as i8, h, w)).collect())
+        .map(|x| {
+            x.chars()
+                .map(|y| Tree::new(y as i8 - '0' as i8, h, w))
+                .collect()
+        })
         .collect()
 }
 
-fn calculate_visible_end(forest: &[Vec<Tree>], start: (usize, usize), ort: (isize, isize), verbose: bool) -> (isize, isize) {
+fn calculate_visible_end(
+    forest: &[Vec<Tree>],
+    start: (usize, usize),
+    ort: (isize, isize),
+    verbose: bool,
+) -> (isize, isize) {
     let h = forest.len() as isize;
     let mut ix = start.0 as isize;
     let mut jy = start.1 as isize;

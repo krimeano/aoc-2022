@@ -18,7 +18,7 @@ impl Rope {
         [self.h[0] - self.t[0], self.h[1] - self.t[1]]
     }
 
-    pub fn mv(&mut self, dir: [i32; 2], verbose: bool) -> () {
+    pub fn mv(&mut self, dir: [i32; 2], verbose: bool) {
         if verbose {
             println!("move {:?}", self);
             println!("th {:?}, dir {:?}", self.th(), dir);
@@ -34,13 +34,7 @@ impl Rope {
     }
 }
 
-const DIRS: [(char, [i32; 2]); 4] = [
-    ('R', [1, 0]),
-    ('L', [-1, 0]),
-    ('U', [0, 1]),
-    ('D', [0, -1]),
-];
-
+const DIRS: [(char, [i32; 2]); 4] = [('R', [1, 0]), ('L', [-1, 0]), ('U', [0, 1]), ('D', [0, -1])];
 
 pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
     let char_dir = HashMap::from(DIRS);
@@ -59,7 +53,18 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
 
 pub fn solve_2(input_lines: &[String], verbose: bool) -> usize {
     let char_dir = HashMap::from(DIRS);
-    let mut knots = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], ];
+    let mut knots = [
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+        [0, 0],
+    ];
     let mut tt = HashSet::from([[0, 0]]);
     if verbose {
         println!("{:?}", knots);
@@ -81,7 +86,11 @@ pub fn solve_2(input_lines: &[String], verbose: bool) -> usize {
     tt.len()
 }
 
-fn line_to_command(char_dir: &HashMap<char, [i32; 2]>, line: &str, verbose: bool) -> (usize, [i32; 2]) {
+fn line_to_command(
+    char_dir: &HashMap<char, [i32; 2]>,
+    line: &str,
+    verbose: bool,
+) -> (usize, [i32; 2]) {
     if line.is_empty() {
         return (0, [0, 0]);
     }
@@ -105,13 +114,21 @@ fn line_to_command(char_dir: &HashMap<char, [i32; 2]>, line: &str, verbose: bool
     (steps, dir)
 }
 
-fn follow(dot: [i32; 2], aim: [i32; 2]) -> [i32; 2] { plus(dot, get_dir(dot, aim)) }
+fn follow(dot: [i32; 2], aim: [i32; 2]) -> [i32; 2] {
+    plus(dot, get_dir(dot, aim))
+}
 
-fn get_dir(dot: [i32; 2], aim: [i32; 2]) -> [i32; 2] { decrement(minus(aim, dot)) }
+fn get_dir(dot: [i32; 2], aim: [i32; 2]) -> [i32; 2] {
+    decrement(minus(aim, dot))
+}
 
-fn plus(a: [i32; 2], b: [i32; 2]) -> [i32; 2] { [a[0] + b[0], a[1] + b[1]] }
+fn plus(a: [i32; 2], b: [i32; 2]) -> [i32; 2] {
+    [a[0] + b[0], a[1] + b[1]]
+}
 
-fn minus(a: [i32; 2], b: [i32; 2]) -> [i32; 2] { [a[0] - b[0], a[1] - b[1]] }
+fn minus(a: [i32; 2], b: [i32; 2]) -> [i32; 2] {
+    [a[0] - b[0], a[1] - b[1]]
+}
 
 // fn scalar(a: [i32; 2], b: [i32; 2]) -> i32 { a[0] * b[0] + a[1] * b[1] }
 
