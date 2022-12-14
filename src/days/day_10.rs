@@ -10,7 +10,11 @@ struct Monitor {
 
 impl Monitor {
     pub fn new(verbose: bool) -> Self {
-        Self { current_ix: 0, total: 0, verbose }
+        Self {
+            current_ix: 0,
+            total: 0,
+            verbose,
+        }
     }
 
     pub fn log(&mut self, cycle: usize, x: i32) {
@@ -77,7 +81,11 @@ impl Proc {
 
     fn draw(&mut self) {
         let y = ((self.cycle - 1) % SIZE) as i32;
-        let c = if y > self.x - 2 && y < self.x + 2 { '#' } else { '.' };
+        let c = if y > self.x - 2 && y < self.x + 2 {
+            '#'
+        } else {
+            '.'
+        };
         if self.monitor.verbose {
             println!("{:?} {:?} {:?}", y, self.x, c);
         }
