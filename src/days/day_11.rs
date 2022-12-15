@@ -23,7 +23,7 @@ struct Monkey {
     div: u32,
     op: Op,
     inspected: usize,
-    items: Vec<u32>,
+    s_items: Vec<u32>,
 }
 
 impl Monkey {
@@ -34,7 +34,7 @@ impl Monkey {
             div: 1,
             op: Op::new(),
             inspected: 0,
-            items: vec![],
+            s_items: vec![],
         }
     }
 
@@ -70,30 +70,46 @@ impl fmt::Debug for Op {
     }
 }
 
-pub fn solve_1(input_lines: &[String], verbose: bool) -> u32 {
-    let mut monkeys: Vec<Monkey> = parse_monkeys(input_lines);
-    let size = monkeys.len();
-    if verbose {
-        print_monkeys(&monkeys)
-    }
-
-    for monkey in &monkeys {
-        let mut passes = Vec::new();
-        for item in &monkey.items {
-            let pass = monkey.inspect(*item);
-            println!("{}, {:?}", item, pass);
-            passes.push(pass);
-        }
-        for pass in passes {
-            let another = &mut monkeys[pass.0];
-            another.items.push(pass.1)
-        }
-    }
-    0
+pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
+    solve(input_lines, verbose, 20)
 }
 
-pub fn solve_2(_input_lines: &[String], _verbose: bool) -> u32 {
-    0
+pub fn solve_2(input_lines: &[String], verbose: bool) -> usize {
+    solve(input_lines, verbose, 10000)
+}
+
+pub fn solve(input_lines: &[String], verbose: bool, rounds: usize) -> usize {
+    let mut monkeys: Vec<Monkey> = parse_monkeys(input_lines);
+    let size = monkeys.len();
+    let mut all_items = monkeys.iter().map(|x| x.s_items.clone()).collect::<Vec<Vec<u32>>>();
+    if verbose {
+        print_monkeys(&monkeys);
+    }
+    if verbose {
+        println!("{:?}", all_items);
+    }
+    for round in 1..=rounds {
+        for ix in 0..size {
+            let mut passes = Vec::new();
+            while all_items[ix].len() > 0 {
+                let item = all_items[ix].pop().unwrap();
+                passes.push(monkeys[ix].inspect(item));
+                monkeys[ix].inspected += 1;
+            }
+            while passes.len() > 0 {
+                let (jy, item) = passes.pop().unwrap();
+                all_items[jy].push(item);
+            }
+        }
+        if verbose {
+            println!("{}: {:?}", round, all_items);
+        }
+    }
+    monkeys.sort_by(|a, b| b.inspected.cmp(&a.inspected));
+    if verbose {
+        print_monkeys(&monkeys);
+    }
+    monkeys[0].inspected * monkeys[1].inspected
 }
 
 fn parse_monkeys(input_lines: &[String]) -> Vec<Monkey> {
@@ -116,7 +132,7 @@ fn parse_monkey(lines: &[String]) -> Monkey {
         let parts = line.trim().split(": ").collect::<Vec<&str>>();
         match parts[0] {
             "Starting items" => {
-                monkey.items = parts[1].split(", ").map(|x| x.parse().unwrap()).collect();
+                monkey.s_items = parts[1].split(", ").map(|x| x.parse().unwrap()).collect();
             }
             "Operation" => {
                 let val = parts[1].split(' ').last().unwrap();
@@ -152,12 +168,12 @@ mod tests {
     #[test]
     fn part_1() {
         let probe = read_probe(11, None);
-        assert_eq!(solve_1(&probe, true), 10605);
+        assert_eq!(solve_1(&probe, false), 10605);
     }
 
     #[test]
     fn part_2() {
         let probe = read_probe(11, None);
-        assert_eq!(solve_2(&probe, true), 0);
+        assert_eq!(solve_2(&probe, true), 2713310158);
     }
 }
