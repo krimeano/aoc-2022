@@ -3,7 +3,7 @@ use std::fmt;
 struct Op {
     op: char,
     old: bool,
-    number: u32,
+    number: u64,
 }
 
 impl Op {
@@ -20,10 +20,10 @@ impl Op {
 struct Monkey {
     yes: usize,
     no: usize,
-    div: u32,
+    div: u64,
     op: Op,
     inspected: usize,
-    s_items: Vec<u32>,
+    s_items: Vec<u64>,
 }
 
 impl Monkey {
@@ -38,23 +38,30 @@ impl Monkey {
         }
     }
 
-    pub fn inspect(&self, item: u32) -> (usize, u32) {
-        let mut level = self.worry(item);
-        level = self.calm(level);
-        let ix = if level % self.div == 0 { self.yes } else { self.no };
+    pub fn inspect(&self, item: u64, should_calm: bool, cap: u64) -> (usize, u64) {
+        let mut level = self.worry(item, cap);
+        if should_calm {
+            level = self.calm(level);
+        }
+        let ix = if level % self.div == 0 {
+            self.yes
+        } else {
+            self.no
+        };
         (ix, level)
     }
 
-    fn worry(&self, item: u32) -> u32 {
-        let other = if self.op.old { item } else { self.op.number };
+    fn worry(&self, item: u64, cap: u64) -> u64 {
+        let a = item % cap;
+        let b = (if self.op.old { item } else { self.op.number }) % cap;
         if self.op.op == '*' {
-            item * other
+            (a * b) % cap
         } else {
-            item + other
+            (a + b) % cap
         }
     }
 
-    fn calm(&self, worried: u32) -> u32 {
+    fn calm(&self, worried: u64) -> u64 {
         worried / 3
     }
 }
@@ -71,19 +78,29 @@ impl fmt::Debug for Op {
 }
 
 pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
-    solve(input_lines, verbose, 20)
+    solve(input_lines, verbose, 20, true)
 }
 
 pub fn solve_2(input_lines: &[String], verbose: bool) -> usize {
-    solve(input_lines, verbose, 10000)
+    solve(input_lines, verbose, 10000, false)
 }
 
-pub fn solve(input_lines: &[String], verbose: bool, rounds: usize) -> usize {
+pub fn solve(input_lines: &[String], verbose: bool, rounds: usize, should_calm: bool) -> usize {
     let mut monkeys: Vec<Monkey> = parse_monkeys(input_lines);
     let size = monkeys.len();
-    let mut all_items = monkeys.iter().map(|x| x.s_items.clone()).collect::<Vec<Vec<u32>>>();
+    let mut all_items = monkeys
+        .iter()
+        .map(|x| x.s_items.clone())
+        .collect::<Vec<Vec<u64>>>();
     if verbose {
         print_monkeys(&monkeys);
+    }
+    let mut cap = if should_calm { 3 } else { 1 };
+    for ix in 0..size {
+        cap *= monkeys[ix].div;
+    }
+    if verbose {
+        println!("CAP = {}, CAP**2 = {}", cap, cap * cap);
     }
     if verbose {
         println!("{:?}", all_items);
@@ -93,7 +110,7 @@ pub fn solve(input_lines: &[String], verbose: bool, rounds: usize) -> usize {
             let mut passes = Vec::new();
             while all_items[ix].len() > 0 {
                 let item = all_items[ix].pop().unwrap();
-                passes.push(monkeys[ix].inspect(item));
+                passes.push(monkeys[ix].inspect(item, should_calm, cap));
                 monkeys[ix].inspected += 1;
             }
             while passes.len() > 0 {
@@ -174,6 +191,6 @@ mod tests {
     #[test]
     fn part_2() {
         let probe = read_probe(11, None);
-        assert_eq!(solve_2(&probe, true), 2713310158);
+        assert_eq!(solve_2(&probe, false), 2713310158);
     }
 }
