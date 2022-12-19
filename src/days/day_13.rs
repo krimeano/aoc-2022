@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
     let mut out = 0;
     let mut ix = 1;
@@ -5,16 +7,16 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
     let mut b: Option<&String> = None;
     for line in input_lines {
         if line.is_empty() {
-            if compare_packets(&a.unwrap(), &b.unwrap(), verbose) < 0 {
+            if compare_packets(&a.unwrap(), &b.unwrap(), verbose).is_lt() {
                 if verbose {
                     println!("{:?} < {:?}", a.unwrap(), b.unwrap());
                     println!();
                 }
                 out += ix;
             } else if verbose {
-                    println!("{:?} >= {:?}", a.unwrap(), b.unwrap());
-                    println!();
-                }
+                println!("{:?} >= {:?}", a.unwrap(), b.unwrap());
+                println!();
+            }
 
             a = None;
             b = None;
@@ -30,22 +32,40 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
     out
 }
 
-pub fn solve_2(_input_lines: &[String], _verbose: bool) -> u32 {
-    0
+pub fn solve_2(input_lines: &[String], verbose: bool) -> usize {
+    let mut lines = input_lines.iter().filter(|line| !line.is_empty()).map(|line| line.clone()).collect::<Vec<String>>();
+    lines.push("[[2]]".to_string());
+    lines.push("[[6]]".to_string());
+    lines.sort_by(|a, b| compare_packets(a, b, false));
+    if verbose {
+        println!("{:#?}", lines);
+    }
+    let mut out = 1;
+    for (ix, x) in lines.iter().enumerate() {
+        if x == "[[2]]" || x == "[[6]]" {
+            out *= ix + 1;
+            if verbose {
+                println!("index = {}", ix + 1);
+            }
+        }
+    }
+
+    out
 }
 
-fn compare_packets(a: &str, b: &str, verbose: bool) -> i8 {
+fn compare_packets(a: &str, b: &str, verbose: bool) -> Ordering {
     if verbose {
         println!("{} vs {}", a, b);
     }
     let is_a_int = a.chars().next().unwrap() != '[' && a.chars().last().unwrap() != ']';
     let is_b_int = b.chars().next().unwrap() != '[' && b.chars().last().unwrap() != ']';
     if is_a_int && is_b_int {
-        let result = a.parse::<i8>().unwrap() - b.parse::<i8>().unwrap();
+        let a8 = a.parse::<i8>().unwrap();
+        let b8 = b.parse::<i8>().unwrap();
         if verbose {
-            println!("{} - {} = {}", a, b, result);
+            println!("{} - {} = {}", a, b, a8 - b8);
         }
-        return result;
+        return a8.cmp(&b8);
     }
     if is_a_int && !is_b_int {
         return compare_packets(&format!("[{}]", a), b, verbose);
@@ -62,14 +82,14 @@ fn compare_packets(a: &str, b: &str, verbose: bool) -> i8 {
     for (ix, x) in xx.iter().enumerate() {
         if let Some(y) = yy.get(ix) {
             let sub_result = compare_packets(x, y, verbose);
-            if sub_result != 0 {
+            if sub_result.is_ne() {
                 return sub_result;
             }
         } else {
             if verbose {
                 println!("{} > {}", a, b);
             }
-            return 1;
+            return Ordering::Greater;
         }
     }
 
@@ -77,14 +97,14 @@ fn compare_packets(a: &str, b: &str, verbose: bool) -> i8 {
         if verbose {
             println!("{} < {}", a, b);
         }
-        return -1;
+        return Ordering::Less;
     }
 
     if verbose {
         println!("{} = {}", a, b);
     }
 
-    0
+    Ordering::Equal
 }
 
 fn parse_packet(p: &str) -> Vec<String> {
@@ -126,12 +146,12 @@ mod tests {
     #[test]
     fn part_1() {
         let probe = read_probe(13, None);
-        assert_eq!(solve_1(&probe, true), 13);
+        assert_eq!(solve_1(&probe, false), 13);
     }
 
     #[test]
     fn part_2() {
         let probe = read_probe(13, None);
-        assert_eq!(solve_2(&probe, true), 0);
+        assert_eq!(solve_2(&probe, false), 140);
     }
 }
