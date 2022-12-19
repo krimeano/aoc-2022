@@ -7,7 +7,7 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
     let mut b: Option<&String> = None;
     for line in input_lines {
         if line.is_empty() {
-            if compare_packets(&a.unwrap(), &b.unwrap(), verbose).is_lt() {
+            if compare_packets(a.unwrap(), b.unwrap(), verbose).is_lt() {
                 if verbose {
                     println!("{:?} < {:?}", a.unwrap(), b.unwrap());
                     println!();
@@ -21,9 +21,9 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
             a = None;
             b = None;
             ix += 1;
-        } else if a == None {
+        } else if a.is_none() {
             a = Some(line);
-        } else if b == None {
+        } else if b.is_none() {
             b = Some(line);
         } else {
             panic!();
@@ -33,7 +33,11 @@ pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
 }
 
 pub fn solve_2(input_lines: &[String], verbose: bool) -> usize {
-    let mut lines = input_lines.iter().filter(|line| !line.is_empty()).map(|line| line.clone()).collect::<Vec<String>>();
+    let mut lines = input_lines
+        .iter()
+        .filter(|line| !line.is_empty())
+        .cloned()
+        .collect::<Vec<String>>();
     lines.push("[[2]]".to_string());
     lines.push("[[6]]".to_string());
     lines.sort_by(|a, b| compare_packets(a, b, false));
@@ -57,8 +61,8 @@ fn compare_packets(a: &str, b: &str, verbose: bool) -> Ordering {
     if verbose {
         println!("{} vs {}", a, b);
     }
-    let is_a_int = a.chars().next().unwrap() != '[' && a.chars().last().unwrap() != ']';
-    let is_b_int = b.chars().next().unwrap() != '[' && b.chars().last().unwrap() != ']';
+    let is_a_int = !a.starts_with('[') && !a.ends_with(']');
+    let is_b_int = !b.starts_with('[') && !b.ends_with(']');
     if is_a_int && is_b_int {
         let a8 = a.parse::<i8>().unwrap();
         let b8 = b.parse::<i8>().unwrap();
@@ -135,7 +139,7 @@ fn parse_packet(p: &str) -> Vec<String> {
         }
         cur.push(c);
     }
-    return out;
+    out
 }
 
 #[cfg(test)]

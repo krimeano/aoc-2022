@@ -108,12 +108,12 @@ pub fn solve(input_lines: &[String], verbose: bool, rounds: usize, should_calm: 
     for round in 1..=rounds {
         for ix in 0..size {
             let mut passes = Vec::new();
-            while all_items[ix].len() > 0 {
+            while !all_items[ix].is_empty() {
                 let item = all_items[ix].pop().unwrap();
                 passes.push(monkeys[ix].inspect(item, should_calm, cap));
                 monkeys[ix].inspected += 1;
             }
-            while passes.len() > 0 {
+            while !passes.is_empty() {
                 let (jy, item) = passes.pop().unwrap();
                 all_items[jy].push(item);
             }

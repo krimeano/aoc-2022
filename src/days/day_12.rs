@@ -29,13 +29,13 @@ impl Cell {
 }
 
 pub fn solve_1(input_lines: &[String], verbose: bool) -> usize {
-    let [[ix0, jy0], [ix1, jy1]] = find_points(&input_lines);
+    let [[ix0, jy0], [ix1, jy1]] = find_points(input_lines);
     solve_for_points([ix0, jy0], [ix1, jy1], input_lines, verbose).unwrap()
 }
 
 pub fn solve_2(input_lines: &[String], verbose: bool) -> usize {
-    let [[ix0, jy0], [ix1, jy1]] = find_points(&input_lines);
-    let possible_starts = find_possible_starts(&input_lines);
+    let [[ix0, jy0], [ix1, jy1]] = find_points(input_lines);
+    let possible_starts = find_possible_starts(input_lines);
     if verbose {
         println!("{:#?}", input_lines);
         println!("{:?}", possible_starts);
@@ -49,7 +49,10 @@ pub fn solve_2(input_lines: &[String], verbose: bool) -> usize {
         if let Some(result) = solve_for_points([ix, jy], [ix1, jy1], input_lines, verbose) {
             if result < best_result {
                 if verbose {
-                    println!("{} is better than {} if start from [{}, {}]!", result, best_result, ix, jy)
+                    println!(
+                        "{} is better than {} if start from [{}, {}]!",
+                        result, best_result, ix, jy
+                    )
                 }
                 best_result = result
             }
@@ -74,9 +77,10 @@ fn find_points(lines: &[String]) -> [[usize; 2]; 2] {
 }
 
 fn find_possible_starts(input_lines: &[String]) -> Vec<[usize; 2]> {
-    let lines: Vec<String> = input_lines.iter()
+    let lines: Vec<String> = input_lines
+        .iter()
         .filter(|line| !line.is_empty())
-        .map(|line| line.clone())
+        .cloned()
         .collect();
 
     let mut out = vec![];
@@ -110,7 +114,12 @@ fn find_possible_starts(input_lines: &[String]) -> Vec<[usize; 2]> {
     out
 }
 
-fn solve_for_points([ix0, jy0]: [usize; 2], [ix1, jy1]: [usize; 2], input_lines: &[String], verbose: bool) -> Option<usize> {
+fn solve_for_points(
+    [ix0, jy0]: [usize; 2],
+    [ix1, jy1]: [usize; 2],
+    input_lines: &[String],
+    verbose: bool,
+) -> Option<usize> {
     if verbose {
         println!("{:#?}", input_lines);
         println!("start  at {:?}", (ix0, jy0));
@@ -119,7 +128,7 @@ fn solve_for_points([ix0, jy0]: [usize; 2], [ix1, jy1]: [usize; 2], input_lines:
     let mut cells: Vec<Vec<Cell>> = input_lines
         .iter()
         .filter(|line| !line.is_empty())
-        .map(|line| line.chars().map(|c| Cell::new(c)).collect())
+        .map(|line| line.chars().map(Cell::new).collect())
         .collect();
     cells[ix0][jy0].s = Some(0);
     let h = cells.len();
@@ -152,7 +161,7 @@ fn solve_for_points([ix0, jy0]: [usize; 2], [ix1, jy1]: [usize; 2], input_lines:
                 if came {
                     break;
                 }
-                if cells[ix][jy].s != None || cells[ix][jy].h > cells[ix_c][jy_c].h + 1 {
+                if cells[ix][jy].s.is_some() || cells[ix][jy].h > cells[ix_c][jy_c].h + 1 {
                     continue;
                 }
                 cells[ix][jy].s = Some(current_steps);
@@ -175,7 +184,7 @@ fn solve_for_points([ix0, jy0]: [usize; 2], [ix1, jy1]: [usize; 2], input_lines:
     if verbose {
         let mut ix_c = ix1;
         let mut jy_c = jy1;
-        while cells[ix_c][jy_c].f != None {
+        while cells[ix_c][jy_c].f.is_some() {
             let [ix, jy] = cells[ix_c][jy_c].f.unwrap();
             cells[ix][jy].t = Some([ix_c, jy_c]);
             ix_c = ix;
