@@ -16,7 +16,7 @@ impl Cell {
         let h = match c {
             'S' => 1,
             'E' => 26,
-            _ => c as u8 - 'a' as u8 + 1,
+            _ => c as u8 - b'a' + 1,
         };
         Self {
             c,

@@ -18,14 +18,17 @@ pub fn solve(input_lines: &[String], verbose: bool, extend: bool) -> usize {
 
     let mut reservoir = create_reservoir(limits, &lines, extend, verbose);
 
-    if verbose { print_me(&reservoir); }
+    if verbose {
+        print_me(&reservoir);
+    }
 
     let count_sand = drop_sands(&mut reservoir, limits, verbose);
 
-    if verbose { print_me(&reservoir); }
+    if verbose {
+        print_me(&reservoir);
+    }
     count_sand
 }
-
 
 fn lines_to_coords(input_lines: &[String]) -> Vec<Vec<[usize; 2]>> {
     input_lines
@@ -67,7 +70,6 @@ fn find_limits(lines: &[Vec<[usize; 2]>], extend: bool) -> [[usize; 2]; 2] {
 
     bottom += if extend { 2 } else { 1 };
 
-
     left = if extend {
         500 - min(bottom, 500)
     } else {
@@ -83,7 +85,12 @@ fn find_limits(lines: &[Vec<[usize; 2]>], extend: bool) -> [[usize; 2]; 2] {
     [[left, top], [right, bottom]]
 }
 
-fn create_reservoir([[x_min, y_min], [x_max, y_max]]: [[usize; 2]; 2], lines: &[Vec<[usize; 2]>], extended: bool, verbose: bool) -> Vec<Vec<char>> {
+fn create_reservoir(
+    [[x_min, y_min], [x_max, y_max]]: [[usize; 2]; 2],
+    lines: &[Vec<[usize; 2]>],
+    extended: bool,
+    verbose: bool,
+) -> Vec<Vec<char>> {
     let mut reservoir: Vec<Vec<char>> = (y_min..=y_max)
         .map(|_y| (x_min..=x_max).map(|_x| '.').collect())
         .collect();
@@ -128,7 +135,11 @@ fn print_me(reservoir: &[Vec<char>]) {
     );
 }
 
-fn drop_sands(reservoir: &mut [Vec<char>], [[x_min, y_min], [_x_max, y_max]]: [[usize; 2]; 2], verbose: bool) -> usize {
+fn drop_sands(
+    reservoir: &mut [Vec<char>],
+    [[x_min, y_min], [_x_max, y_max]]: [[usize; 2]; 2],
+    verbose: bool,
+) -> usize {
     let mut count_sand = 0;
 
     loop {
@@ -199,6 +210,6 @@ mod tests {
     #[test]
     fn part_2() {
         let probe = read_probe(14, None);
-        assert_eq!(solve_2(&probe, true), 93);
+        assert_eq!(solve_2(&probe, false), 93);
     }
 }
