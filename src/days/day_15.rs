@@ -62,7 +62,11 @@ pub fn solve_2(input_lines: &[String], edge: isize, verbose: bool) -> isize {
         for x in max(0, x0 - plus_size)..=min(edge, x0 + plus_size) {
             let dx = max(x0, x) - min(x0, x);
             let dy = plus_size - dx;
-            let yy = if dy > 0 { vec![y0 - dy, y0 + dy] } else { vec![y0] };
+            let yy = if dy > 0 {
+                vec![y0 - dy, y0 + dy]
+            } else {
+                vec![y0]
+            };
             for y in yy {
                 if y < 0 || y > edge {
                     continue;
@@ -87,10 +91,8 @@ pub fn solve_2(input_lines: &[String], edge: isize, verbose: bool) -> isize {
                         }
                         covered = true;
                         break;
-                    } else {
-                        if verbose {
-                            println!("TOO FAR {}", d)
-                        }
+                    } else if verbose {
+                        println!("TOO FAR {}", d)
                     }
                 }
                 if !covered {
@@ -134,7 +136,7 @@ impl LineParser {
         let distance = max(sensor[0], beacon[0]) - min(sensor[0], beacon[0])
             + max(sensor[1], beacon[1])
             - min(sensor[1], beacon[1]);
-        return (sensor, beacon, distance as isize);
+        (sensor, beacon, distance as isize)
     }
 }
 
