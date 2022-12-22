@@ -122,7 +122,7 @@ pub fn solve(day: u8, verbose: bool) {
         15 => {
             let r1 = day_15::solve_1(&read_day(day, None), 2000000, verbose);
             println!("Part 1: {}", r1);
-            let r2 = day_15::solve_2(&read_day(day, None), verbose);
+            let r2 = day_15::solve_2(&read_day(day, None), 4000000, verbose);
             println!("Part 2: {}", r2);
         }
 
