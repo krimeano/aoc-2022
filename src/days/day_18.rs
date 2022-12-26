@@ -160,7 +160,7 @@ fn get_field(input_lines: &[String]) -> HashMap<[isize; 3], [isize; 3]> {
     field = field
         .iter()
         .filter(|(_, value)| **value != ZERO)
-        .map(|(k, v)| (k.clone(), v.clone()))
+        .map(|(k, v)| (*k, *v))
         .collect();
     field
 }
@@ -170,7 +170,7 @@ fn find_surface(start: [isize; 3], field: &HashMap<[isize; 3], [isize; 3]>, verb
         println!("FIND SURFACE FROM {:?}", start);
     }
     let mut surface = HashMap::new();
-    surface.insert(start, field.get(&start).unwrap().clone());
+    surface.insert(start, *field.get(&start).unwrap());
 
     let mut current_keys = vec![start];
 

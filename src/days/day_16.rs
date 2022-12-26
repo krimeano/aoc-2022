@@ -133,7 +133,7 @@ impl Valves {
             }
             wave = front;
         }
-        return out;
+        out
     }
 }
 
@@ -215,10 +215,8 @@ impl Paths {
                     );
                 }
                 let time = distance + existing_path.time + 1;
-                if time >= TIME_LIMIT {
-                    if valves.verbose {
-                        println!("\t TOO LATE {}", time);
-                    }
+                if time >= TIME_LIMIT && valves.verbose {
+                    println!("\t TOO LATE {}", time);
                 }
                 let score = (TIME_LIMIT - time) * power;
 
