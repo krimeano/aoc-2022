@@ -191,17 +191,28 @@ impl Paths {
             passed.sort();
             let mut paths = vec![];
             if valves.verbose {
-                println!("next node is {:?}, so passed: {:?}, leftover: {:?}", last, &passed, &ahead);
+                println!(
+                    "next node is {:?}, so passed: {:?}, leftover: {:?}",
+                    last, &passed, &ahead
+                );
             }
 
             for existing_path in self.paths.iter() {
                 if valves.verbose {
                     println!("\texisting {:?}", existing_path);
                 }
-                let distance = valves.distances.get(&existing_path.last).unwrap().get(&last).unwrap();
+                let distance = valves
+                    .distances
+                    .get(&existing_path.last)
+                    .unwrap()
+                    .get(&last)
+                    .unwrap();
                 let power = valves.powers.get(&last).unwrap();
                 if valves.verbose {
-                    println!("\tdistance from {} to {} is {}, and power = {}", existing_path.last, last, distance, power);
+                    println!(
+                        "\tdistance from {} to {} is {}, and power = {}",
+                        existing_path.last, last, distance, power
+                    );
                 }
                 let time = distance + existing_path.time + 1;
                 if time >= TIME_LIMIT {
@@ -232,7 +243,6 @@ impl Paths {
         out
     }
 }
-
 
 pub fn solve_1(input_lines: &[String], verbose: bool) -> u32 {
     let mut valves = Valves::new(LineParser::new(), verbose);
