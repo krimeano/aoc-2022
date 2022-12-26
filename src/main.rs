@@ -1,3 +1,5 @@
+extern crate core;
+
 mod aoc_lib;
 mod days;
 mod run_params;

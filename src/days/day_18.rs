@@ -49,6 +49,10 @@ pub fn solve_2(input_lines: &[String], verbose: bool) -> isize {
     }
 
     let mut total = 0;
+    let mut caves = Vec::new();
+
+    surfaces.sort_by(|a, b| b.len().cmp(&a.len()));
+
     for surface in surfaces {
         let mut aggr = [0, 0, 0];
         for key in surface.keys() {
@@ -60,14 +64,49 @@ pub fn solve_2(input_lines: &[String], verbose: bool) -> isize {
             println!("SURFACE ({},{:?}, {:?}) : {:?}", size, aggr, mean, &surface);
         }
         let mut div = 0;
-        for (key, value) in surface {
-            div += scalar(value, plus(key, mult(-1, mean)));
+        for (key, value) in &surface {
+            div += to_ort(scalar(*value, plus(*key, mult(-1, mean))));
         }
         if verbose {
             println!("DIV = {:?}", div);
         }
-        if div >= 0 {
-            total += size;
+        if div == 0 {
+            panic!("Wow!");
+        }
+        if div < 0 && size >= 54 {
+            let mut zero_div = 0;
+            for (key, value) in &surface {
+                zero_div += to_ort(scalar(*value, *key));
+            }
+            if verbose {
+                println!("CAVE! {}", zero_div);
+            }
+            caves.push(surface.clone());
+        }
+        if div > 0 {
+            if size >= 54 {
+                total += size;
+                continue;
+            }
+            if verbose {
+                println!("ADDITIONAL CHECK IS INSIDE CAVE, {:?} {:?}", size, mean);
+            }
+            let mut inside_cave = false;
+            for cave in &caves {
+                let mut piece_div = 0;
+                for (key, value) in cave {
+                    piece_div += to_ort(scalar(*value, plus(*key, mult(-1, mean))));
+                }
+                if verbose {
+                    println!("PIECE DIV = {}", piece_div);
+                }
+                if piece_div < 0 {
+                    inside_cave = true;
+                }
+            }
+            if !inside_cave {
+                total += size;
+            }
         }
     }
     total
@@ -88,6 +127,16 @@ fn plus([ax, ay, az]: [isize; 3], [bx, by, bz]: [isize; 3]) -> [isize; 3] {
 
 fn scalar([ax, ay, az]: [isize; 3], [bx, by, bz]: [isize; 3]) -> isize {
     ax * bx + ay * by + az * bz
+}
+
+fn to_ort(a: isize) -> isize {
+    if a > 0 {
+        1
+    } else if a < 0 {
+        -1
+    } else {
+        0
+    }
 }
 
 fn get_field(input_lines: &[String]) -> HashMap<[isize; 3], [isize; 3]> {
