@@ -11,7 +11,6 @@ const SIDES: [[isize; 3]; 6] = [
 
 const ZERO: [isize; 3] = [0, 0, 0];
 
-
 pub fn solve_1(input_lines: &[String], _verbose: bool) -> usize {
     get_field(input_lines).len()
 }
@@ -165,7 +164,11 @@ fn get_field(input_lines: &[String]) -> HashMap<[isize; 3], [isize; 3]> {
     field
 }
 
-fn find_surface(start: [isize; 3], field: &HashMap<[isize; 3], [isize; 3]>, verbose: bool) -> HashMap<[isize; 3], [isize; 3]> {
+fn find_surface(
+    start: [isize; 3],
+    field: &HashMap<[isize; 3], [isize; 3]>,
+    verbose: bool,
+) -> HashMap<[isize; 3], [isize; 3]> {
     if verbose {
         println!("FIND SURFACE FROM {:?}", start);
     }
@@ -189,17 +192,16 @@ fn find_surface(start: [isize; 3], field: &HashMap<[isize; 3], [isize; 3]>, verb
                     continue;
                 }
                 let neighbours = [
-                    plus(current, plus(shift, *pointing)), // side front
-                    plus(current, mult(2, shift)), // the same plane
+                    plus(current, plus(shift, *pointing)),           // side front
+                    plus(current, mult(2, shift)),                   // the same plane
                     plus(current, plus(shift, mult(-1, *pointing))), // behind the corner
                 ];
                 if verbose {
                     println!("neighbours whith shift = {:?}: {:?}", shift, neighbours);
                 }
                 for n in neighbours {
-                    let mut projection = 0;
                     if let Some(n_pointing) = field.get(&n) {
-                        projection = scalar(*pointing, *n_pointing);
+                        let projection = scalar(*pointing, *n_pointing);
                         if projection < 0 {
                             if verbose {
                                 println!("opposite direction {:?} at {:?}; ignore and don't look behind the corner", n_pointing, n);
